@@ -40,7 +40,7 @@ def printL(lista):
     print "\n"
     print "\n"
 
-def bfs(inicial,final):
+def bfs(inicial,final,flag):
     fila = [inicial]
     visitados = []
     while(True):
@@ -48,14 +48,17 @@ def bfs(inicial,final):
         del fila[0]
         if not visitado(pai,visitados):
             fila += gera_filhos(pai)
-            printL(fila)
+            poda_heuristica(fila,0)
+            # printL(fila)
             if np.array_equal(pai,final):
+                visitados.append(pai)
                 print "fim"
                 break
 
         visitados.append(pai)
+    printL(visitados)
 
-def calc_heuristica(estado):
+def calc_heuristica(estado, flag):
     k = 1
     heuristica = 0
     for i in range(0,3):
@@ -64,18 +67,29 @@ def calc_heuristica(estado):
                 m, n = np.where(estado == k)
                 m = m[0]
                 n = n[0]
-                heuristica += abs(i-m)+abs(j-n)        
+                if flag == 1:#se flag = 1 faz-se heuristica com manhattan
+                    heuristica += abs(i-m)+abs(j-n)        
+                if flag == 2:#se flag = 2 faz-se heuristica com qtd de diferentes
+                    if m != i or n != j:
+                        heuristica += 1 
             k += 1;
     return heuristica        
 
+def poda_heuristica(lista,flag):
+    if flag != 0: #se flag = 0 não temos nenhum tipo de poda
+        list_heuristicas = []
+        for cel in lista:
+            list_heuristicas.append(calc_heuristica(cel,flag))
 
+        min_heuris = min(list_heuristicas)#pego a minha heuristica menor
 
-def busca_heuristica():
-    print "topper"
+        for i, val in enumerate(list_heuristicas): #podo as heuristicas maiores que a minha mínima
+            if val > min_heuris:
+                del lista[i]
+    return lista
+    
 
 if __name__ == '__main__':
-    inicial = np.matrix('1 2 3;8 0 4;7 6 5')
+    inicial = np.matrix('1 2 3;4 5 6;0 7 8')
     final = np.matrix('1 2 3;4 5 6;7 8 0')
-    # bfs(inicial,final)
-    teste = np.matrix('0 1 2;7 8 3;6 5 4')
-    print calc_heuristica(teste)
+    bfs(inicial,final,0)
