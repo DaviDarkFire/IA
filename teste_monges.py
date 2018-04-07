@@ -36,6 +36,7 @@ def bfs(inicial,final):
             filhos = gera_filhos(pai)
             for filho in filhos:
                 chave_filho = vstr(filho)
+                # print "chave_filho: "+chave_filho
                 if chave_filho not in hpais:
                     hpais[chave_filho] = vstr(pai)
                     lista.append(filho)
