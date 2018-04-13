@@ -32,6 +32,7 @@ def bfs(inicial,final):
         pai = lista[0]
         del lista[0]
         if pai not in visitados:
+            print "visitado"
             visitados.append(pai)
             filhos = gera_filhos(pai)
             for filho in filhos:
